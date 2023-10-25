@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QApplication, QLabel, QWidget, QGridLayout,
                              QLineEdit, QPushButton, QMainWindow, QTableWidget,
-                             QTableWidgetItem, QDialog, QVBoxLayout)
+                             QTableWidgetItem, QDialog, QVBoxLayout, QComboBox)
 from PyQt6.QtGui import QAction
 import sys
 import sqlite3
@@ -56,6 +56,10 @@ class InsertDialog(QDialog):
         student_mame.setPlaceholderText("Name")
         layout.addWidget(student_mame)
 
+        course_name = QComboBox()
+        courses = ["Biology", "Physics", "Chemistry"]
+        course_name.addItems(courses)
+        layout.addWidget(course_name)
         self.setLayout(layout)
 
 
