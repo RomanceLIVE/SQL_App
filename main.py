@@ -1,4 +1,4 @@
-# Import necessary PyQt6 modules and libraries
+
 from PyQt6.QtWidgets import (QApplication, QLabel, QWidget, QGridLayout,
                              QLineEdit, QPushButton, QMainWindow, QTableWidget,
                              QTableWidgetItem, QDialog, QVBoxLayout, QComboBox)
@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
         dialog.exec()
 
 
-# Define the insert dialog class
+# Insert dialog class
 class InsertDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -67,7 +67,7 @@ class InsertDialog(QDialog):
         self.student_name.setPlaceholderText("Name")
         layout.addWidget(self.student_name)
 
-        # Create a combo box for course selection
+        # Create a combo box for course
         self.course_name = QComboBox()
         courses = ["Biology", "Physics", "Chemistry"]
         self.course_name.addItems(courses)
@@ -103,7 +103,7 @@ class InsertDialog(QDialog):
         connection.close()
 
 
-# Create a PyQt6 application
+# Create the application
 app = QApplication(sys.argv)
 
 # Create an instance of the main window
