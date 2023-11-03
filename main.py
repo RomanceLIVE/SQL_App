@@ -1,8 +1,8 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (QApplication, QLabel, QWidget, QGridLayout,
                              QLineEdit, QPushButton, QMainWindow, QTableWidget,
-                             QTableWidgetItem, QDialog, QVBoxLayout, QComboBox)
-from PyQt6.QtGui import QAction
+                             QTableWidgetItem, QDialog, QVBoxLayout, QComboBox, QToolBar)
+from PyQt6.QtGui import QAction, QIcon
 import sys
 import sqlite3
 
@@ -12,6 +12,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()  # Call the parent init method (QMainWindow)
         self.setWindowTitle("SQL App")
+        self.setMinimumSize(800, 600)
 
         # Create file and help menu items
         file_menu_item = self.menuBar().addMenu("&File")
@@ -19,7 +20,7 @@ class MainWindow(QMainWindow):
         edit_menu_item = self.menuBar().addMenu("&Edit")
 
         # Create "Add Student" action and connect it to the "insert" method
-        add_student_action = QAction("Add Student", self)
+        add_student_action = QAction(QIcon("icons/add.png"),"Add Student", self)
         add_student_action.triggered.connect(self.insert)
 
         # Add "Add Student" action to the file menu
@@ -31,7 +32,7 @@ class MainWindow(QMainWindow):
         about_action.setMenuRole(QAction.MenuRole.NoRole)
 
         # Create "Search" section
-        search_action = QAction("Search", self)
+        search_action = QAction(QIcon("icons/search.png"),"Search", self)
         edit_menu_item.addAction(search_action)
         search_action.triggered.connect(self.search)
 
@@ -41,6 +42,13 @@ class MainWindow(QMainWindow):
         self.table.setHorizontalHeaderLabels(("ID", "Name", "Course", "Mobile"))
         self.table.verticalHeader().setVisible(False)  # Hide unnecessary column (above row numbers)
         self.setCentralWidget(self.table)
+
+        # Crate toolbar and toolbar elements
+        toolbar = QToolBar()
+        toolbar.setMovable(True)
+        self.addToolBar(toolbar)
+        toolbar.addAction(add_student_action)
+        toolbar.addAction(search_action)
 
     # Method to load data into the table
     def load_data(self):
