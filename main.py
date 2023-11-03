@@ -1,4 +1,4 @@
-
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (QApplication, QLabel, QWidget, QGridLayout,
                              QLineEdit, QPushButton, QMainWindow, QTableWidget,
                              QTableWidgetItem, QDialog, QVBoxLayout, QComboBox)
@@ -16,6 +16,7 @@ class MainWindow(QMainWindow):
         # Create file and help menu items
         file_menu_item = self.menuBar().addMenu("&File")
         help_menu_item = self.menuBar().addMenu("&Help")
+        edit_menu_item = self.menuBar().addMenu("&Edit")
 
         # Create "Add Student" action and connect it to the "insert" method
         add_student_action = QAction("Add Student", self)
@@ -27,6 +28,12 @@ class MainWindow(QMainWindow):
         # Create "About" action and add it to the help menu
         about_action = QAction("About", self)
         help_menu_item.addAction(about_action)
+        about_action.setMenuRole(QAction.MenuRole.NoRole)
+
+        # Create "Search" section
+        search_action = QAction("Search", self)
+        edit_menu_item.addAction(search_action)
+        search_action.triggered.connect(self.search)
 
         # Create a table to display student data
         self.table = QTableWidget()
@@ -49,6 +56,10 @@ class MainWindow(QMainWindow):
     # Method to open the insert dialog
     def insert(self):
         dialog = InsertDialog()
+        dialog.exec()
+
+    def search(self):
+        dialog = SearchDialog()
         dialog.exec()
 
 
@@ -101,16 +112,52 @@ class InsertDialog(QDialog):
         connection.commit()
         cursor.close()
         connection.close()
-        age_calculator.load_data()
+        main_window.load_data()
+
+
+class SearchDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        # Set window title and size
+        self.setWindowTitle("Search Student Data")
+        self.setFixedWidth(300)
+        self.setFixedHeight(300)
+
+        # Create layout and input widget
+        layout = QVBoxLayout()
+        self.student_name = QLineEdit()
+        self.student_name.setPlaceholderText("Name")
+        layout.addWidget(self.student_name)
+
+        # Create button
+        button = QPushButton("Search")
+        button.clicked.connect(self.search)
+        layout.addWidget(button)
+
+        self.setLayout(layout)
+
+    def search(self):
+        name = self.student_name.text()
+        connection = sqlite3.connect("database.db")
+        cursor = connection.cursor()
+        result = cursor.execute("SELECT * FROM students WHERE name=?", (name,))
+        rows = list(result)
+        print(rows)
+        items = main_window.table.findItems(name, Qt.MatchFlag.MatchFixedString)
+        for item in items:
+            print(item)
+            main_window.table.item(item.row(), 1).setSelected(True)
+        cursor.close()
+        connection.close()
 
 
 # Create the application
 app = QApplication(sys.argv)
 
 # Create an instance of the main window
-age_calculator = MainWindow()
-age_calculator.show()
-age_calculator.load_data()
+main_window = MainWindow()
+main_window.show()
+main_window.load_data()
 
 # Start the application event loop
 sys.exit(app.exec())
