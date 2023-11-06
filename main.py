@@ -30,6 +30,7 @@ class MainWindow(QMainWindow):
         about_action = QAction("About", self)
         help_menu_item.addAction(about_action)
         about_action.setMenuRole(QAction.MenuRole.NoRole)
+        about_action.triggered.connect(self.about)
 
         # Create "Search" section
         search_action = QAction(QIcon("icons/search.png"), "Search", self)
@@ -107,6 +108,21 @@ class MainWindow(QMainWindow):
         dialog = DeleteDialog()
         dialog.exec()
 
+    def about(self):
+        dialog = AboutDialog()
+        dialog.exec()
+
+
+class AboutDialog(QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("About")
+        content = """
+        SQL Student App - Version 1.0
+        Feel free to update and use this application.
+        """
+        self.setText(content)
+
 
 class EditDialog(QDialog):
     def __init__(self):
@@ -170,7 +186,6 @@ class DeleteDialog(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Delete Student Data")
-
 
         layout = QGridLayout()
         confirmation = QLabel("Are you sure you want to delete ?")
